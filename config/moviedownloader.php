@@ -22,6 +22,6 @@ return [
 
     'subtitle_language' => 'pob',
 
-    'movie_folder' => env('MOVIE_FOLDER', '/vagrant'),
+    'movie_folder' => env('MOVIE_FOLDER', '/opt/moviedownloader'),
 
 ];
