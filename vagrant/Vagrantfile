@@ -1,0 +1,49 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    # Use cache
+    if Vagrant.has_plugin?("vagrant-cachier")
+        config.cache.auto_detect = true
+    end
+
+    # Config the box
+    config.vm.box = 'debian/contrib-jessie64'
+    config.vm.hostname = 'moviedownloader'
+
+    # Customize provider
+    config.vm.provider :virtualbox do |vb|
+        vb.customize [
+            "modifyvm", :id,
+            "--name", 'moviedownloader',
+            "--memory", 512
+        ]
+    end
+
+    # Network
+    config.vm.network :private_network, ip: "192.168.10.90"
+    config.vm.network :forwarded_port,
+        guest: 22,
+        host: 9834,
+        id: "ssh",
+        auto_correct: true
+    config.ssh.forward_agent = true
+
+    # Shared Folders
+    config.vm.synced_folder ".", "/srv/salt"
+    config.vm.synced_folder "..", "/opt/moviedownloader"
+
+    # Provision
+    config.vm.provision :salt do |salt|
+        salt.minion_config = "minion"
+        salt.run_highstate = true
+        salt.bootstrap_options = "-P"
+        salt.verbose = true
+        salt.log_level = "warning"
+        salt.colorize = true
+    end
+
+end

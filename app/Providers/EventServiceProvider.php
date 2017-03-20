@@ -2,7 +2,16 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Event;
+use App\Events\MovieRetrieved;
+use App\Events\TorrentAddedToClient;
+use App\Events\TorrentDownloadFinished;
+use App\Events\TorrentFound;
+use App\Listeners\RemoveTorrentFromClient;
+use App\Listeners\RetrieveSubtitle;
+use App\Listeners\SendTorrentToClient;
+use App\Listeners\TorrentSearch;
+use App\Listeners\UpdateMovieStatus;
+use App\Listeners\UpdateMovieStatus2;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -13,8 +22,19 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\SomeEvent' => [
-            'App\Listeners\EventListener',
+        MovieRetrieved::class => [
+            TorrentSearch::class,
+        ],
+        TorrentFound::class => [
+            SendTorrentToClient::class,
+        ],
+        TorrentDownloadFinished::class => [
+            UpdateMovieStatus::class,
+            RemoveTorrentFromClient::class,
+            RetrieveSubtitle::class,
+        ],
+        TorrentAddedToClient::class => [
+            UpdateMovieStatus2::class,
         ],
     ];
 
