@@ -1,6 +1,6 @@
 ## Description
 
-This projects aims to make torrent download dead simple. The user inform the wanted movies at his Letterboxd watchlist and the movie and its subtitle will be downloaded to the configured folder. 
+This projects aims to make torrent download dead simple. The user inform the wanted movies at his [Letterboxd](https://letterboxd.com/) watchlist and the movie and its subtitle will be downloaded to the configured folder. 
 
 ## Installation
 
