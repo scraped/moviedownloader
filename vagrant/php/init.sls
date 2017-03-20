@@ -6,3 +6,4 @@ Install php packages:
       - php5-json
       - php5-redis
       - php5-sqlite
+      - php5-xmlrpc
