@@ -57,7 +57,7 @@ class RetrieveSubtitle implements ShouldQueue
         foreach ($files as $file) {
             $fileName = $file->getName();
             if (preg_match('/.*\.[mp4|avi|mkv]/', $fileName)) {
-                $fileFullPath = "{$this->torrentBaseFolder}{$fileName}";
+                $fileFullPath = "{$this->torrentBaseFolder}/{$fileName}";
                 break;
             }
         }
