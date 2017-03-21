@@ -3,7 +3,8 @@
 namespace App\Listeners;
 
 use \App\Events\MovieRetrieved;
-use App\Events\TorrentFound;
+use App\Events\TorrentChosen;
+use App\Events\TorrentsFound;
 use GuzzleHttp\Client;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -56,13 +57,11 @@ class TorrentSearch implements ShouldQueue
         logger("Search for torrent: {$movieFullName}");
         $response = $this->getResponse($movieFullName);
         $allTorrents = $this->retrieveAllTorrents($response);
-        // TODO: may be add an event "TorrentFilter"
-        $torrent = $this->filter($allTorrents);
-        if (empty($torrent)) {
-            // TODO: add an event "TorrentNotFound"
+        if ($allTorrents->isEmpty()) {
+            logger("None torrent found: {$movieFullName}");
             return;
         }
-        event(new TorrentFound($event->movie, $torrent));
+        event(new TorrentsFound($event->movie, $allTorrents));
     }
 
     /**
@@ -116,23 +115,5 @@ class TorrentSearch implements ShouldQueue
         }
 
         return collect($results);
-    }
-
-    /**
-     * Filter torrents
-     *
-     * @param Collection $allTorrents
-     *
-     * @return array
-     */
-    protected function filter($allTorrents)
-    {
-        // TODO: move to class attribute
-        $maxSize = config('moviedownloader.torrent_filters.max_size');
-        $filteredTorrent = $allTorrents->where('size', '<', $maxSize)
-            ->sortByDesc('seeders')
-            ->first();
-
-        return $filteredTorrent;
     }
 }

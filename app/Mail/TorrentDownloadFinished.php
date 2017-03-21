@@ -29,19 +29,26 @@ class TorrentDownloadFinished extends Mailable implements ShouldQueue
     protected $receipts;
 
     /**
+     * @var bool
+     */
+    protected $isSubtitleFound;
+
+    /**
      * Create a new message instance.
      *
      * @param  Torrent $torrent
      * @param  Movie $movie
      * @param  array $receipts
+     * @param  bool $isSubtitleFound
      *
      * @return TorrentDownloadFinished
      */
-    public function __construct(Torrent $torrent, Movie $movie, array $receipts)
+    public function __construct(Torrent $torrent, Movie $movie, array $receipts, $isSubtitleFound)
     {
         $this->torrent = $torrent;
         $this->movie = $movie;
         $this->receipts = $receipts;
+        $this->isSubtitleFound = $isSubtitleFound;
     }
 
     /**
@@ -57,6 +64,7 @@ class TorrentDownloadFinished extends Mailable implements ShouldQueue
             ->view('emails.movie.downloaded')
             ->with([
                 'movie' => $movieFullName,
+                'isSubtitleFound' => $this->isSubtitleFound,
             ]);
     }
 }

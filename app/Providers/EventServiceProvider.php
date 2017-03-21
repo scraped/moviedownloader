@@ -5,7 +5,9 @@ namespace App\Providers;
 use App\Events\MovieRetrieved;
 use App\Events\TorrentAddedToClient;
 use App\Events\TorrentDownloadFinished;
-use App\Events\TorrentFound;
+use App\Events\TorrentChosen;
+use App\Events\TorrentsFound;
+use App\Listeners\FilterTorrents;
 use App\Listeners\RemoveTorrentFromClient;
 use App\Listeners\RetrieveSubtitle;
 use App\Listeners\SendTorrentToClient;
@@ -22,10 +24,13 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        MovieRetrieved::class => [
+        MovieRetrieved::class          => [
             TorrentSearch::class,
         ],
-        TorrentFound::class => [
+        TorrentsFound::class           => [
+            FilterTorrents::class,
+        ],
+        TorrentChosen::class           => [
             SendTorrentToClient::class,
         ],
         TorrentDownloadFinished::class => [
@@ -33,7 +38,7 @@ class EventServiceProvider extends ServiceProvider
             RemoveTorrentFromClient::class,
             RetrieveSubtitle::class,
         ],
-        TorrentAddedToClient::class => [
+        TorrentAddedToClient::class    => [
             UpdateMovieStatus2::class,
         ],
     ];

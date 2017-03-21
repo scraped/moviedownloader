@@ -11,7 +11,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class TorrentFound
+class TorrentChosen
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -31,7 +31,7 @@ class TorrentFound
      * @param  Movie $movie
      * @param  array $torrent
      *
-     * @return TorrentFound
+     * @return TorrentChosen
      */
     public function __construct(Movie $movie, array $torrent)
     {

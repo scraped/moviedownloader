@@ -3,10 +3,9 @@
 namespace App\Listeners;
 
 use App\Events\TorrentDownloadFinished;
-use App\Mail\TorrentDownloadFinished as MailTorrentDownloadFinished;
+use App\Movie;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\Mail;
 
 class UpdateMovieStatus
 {
@@ -29,11 +28,9 @@ class UpdateMovieStatus
      */
     public function handle(TorrentDownloadFinished $event)
     {
+        /** @var Movie $movie */
         $movie = $event->movie;
         $movie->status = 'done';
         $movie->save();
-
-        $receipts = explode(',', config('moviedownloader.notification.email'));
-        Mail::send(new MailTorrentDownloadFinished($event->torrent, $movie, $receipts));
     }
 }

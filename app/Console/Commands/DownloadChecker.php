@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Events\TorrentDownloadFinished;
 use App\Movie;
 use Illuminate\Console\Command;
+use Transmission\Model\File;
 use Transmission\Model\Torrent;
 use Transmission\Transmission;
 
@@ -56,7 +57,26 @@ class DownloadChecker extends Command
             if (!$torrent->isFinished()) {
                 continue;
             }
+            $movieFileFullPath = $this->getMovieFileFullPath($torrent);
+            logger("Torrent download finished: {$movieFileFullPath}");
             event(new TorrentDownloadFinished($torrent, $movie));
         }
+    }
+
+    protected function getMovieFileFullPath(Torrent $torrent)
+    {
+        $torrentBaseFolder = config('moviedownloader.movie_folder');
+        $files = $torrent->getFiles();
+        $fileFullPath = '';
+        /** @var File $file */
+        foreach ($files as $file) {
+            $fileName = $file->getName();
+            if (preg_match('/.*\.[mp4|avi|mkv]/', $fileName)) {
+                $fileFullPath = "{$torrentBaseFolder}/{$fileName}";
+                break;
+            }
+        }
+
+        return $fileFullPath;
     }
 }

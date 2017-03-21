@@ -3,7 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\TorrentAddedToClient;
-use \App\Events\TorrentFound;
+use \App\Events\TorrentChosen;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Transmission\Model\Torrent;
@@ -38,14 +38,14 @@ class SendTorrentToClient implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param  TorrentFound  $event
+     * @param  TorrentChosen  $event
      *
      * @return void
      */
-    public function handle(TorrentFound $event)
+    public function handle(TorrentChosen $event)
     {
         $torrentUrl = $event->torrent['url'];
-        logger("Torrent found: {$torrentUrl}");
+        logger("Torrent chosen: {$torrentUrl}");
         /** @var Torrent $torrent */
         $torrent = $this->torrentClient->add($torrentUrl, false, $this->movieFolder);
         event(new TorrentAddedToClient($torrent, $event->movie));

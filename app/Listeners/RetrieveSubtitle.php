@@ -5,9 +5,11 @@ namespace App\Listeners;
 use App\Events\TorrentDownloadFinished;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Mail;
 use OpenSubtitlesApi\FileGenerator;
 use OpenSubtitlesApi\SubtitlesManager;
 use Transmission\Model\File;
+use App\Mail\TorrentDownloadFinished as MailTorrentDownloadFinished;
 
 class RetrieveSubtitle implements ShouldQueue
 {
@@ -51,6 +53,7 @@ class RetrieveSubtitle implements ShouldQueue
     public function handle(TorrentDownloadFinished $event)
     {
         $torrent = $event->torrent;
+        $movie = $event->movie;
         $files = $torrent->getFiles();
         $fileFullPath = '';
         /** @var File $file */
@@ -61,14 +64,18 @@ class RetrieveSubtitle implements ShouldQueue
                 break;
             }
         }
-        logger("Torrent download finished: {$fileFullPath}");
+        $subtitleFullPath = preg_replace('/\\.[^.\\s]{3,4}$/', '', $fileFullPath) . '.srt';
         $subtitles = $this->subtitleManager->get($fileFullPath);
-        if (!empty($subtitles) && !empty($subtitles[0])) {
+        $isSubtitleFound = !empty($subtitles) && !empty($subtitles[0]);
+        if ($isSubtitleFound) {
             $fileGenerator = new FileGenerator();
             $fileGenerator->downloadSubtitle($subtitles[0], $fileFullPath);
-            logger("Subtitle retrieved: {$fileFullPath}");
+            logger("Subtitle retrieved: {$subtitleFullPath}");
         } else {
-            // subtitle not found
+            logger("Subtitle not found: {$subtitleFullPath}");
         }
+        $receipts = explode(',', config('moviedownloader.notification.email'));
+        Mail::send(new MailTorrentDownloadFinished($event->torrent, $movie, $receipts, $isSubtitleFound));
+        logger("Notification sent: " . config('moviedownloader.notification.email'));
     }
 }
