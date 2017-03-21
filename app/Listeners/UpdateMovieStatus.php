@@ -33,6 +33,7 @@ class UpdateMovieStatus
         $movie->status = 'done';
         $movie->save();
 
-        Mail::send(new MailTorrentDownloadFinished($event->torrent, $movie));
+        $receipts = explode(',', config('moviedownloader.notification.email'));
+        Mail::send(new MailTorrentDownloadFinished($event->torrent, $movie, $receipts));
     }
 }

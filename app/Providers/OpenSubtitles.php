@@ -27,7 +27,9 @@ class OpenSubtitles extends ServiceProvider
     public function register()
     {
         $this->app->singleton(SubtitlesManager::class, function($app) {
-            return new SubtitlesManager('gustavobgama', 'hidib', 'pob');
+            $config = config('moviedownloader.opensubtitles');
+
+            return new SubtitlesManager($config['username'], $config['password'], $config['language']);
         });
     }
 

@@ -24,17 +24,24 @@ class TorrentDownloadFinished extends Mailable implements ShouldQueue
     protected $movie;
 
     /**
+     * @var array
+     */
+    protected $receipts;
+
+    /**
      * Create a new message instance.
      *
      * @param  Torrent $torrent
      * @param  Movie $movie
+     * @param  array $receipts
      *
      * @return TorrentDownloadFinished
      */
-    public function __construct(Torrent $torrent, Movie $movie)
+    public function __construct(Torrent $torrent, Movie $movie, array $receipts)
     {
         $this->torrent = $torrent;
         $this->movie = $movie;
+        $this->receipts = $receipts;
     }
 
     /**
@@ -45,7 +52,7 @@ class TorrentDownloadFinished extends Mailable implements ShouldQueue
     public function build()
     {
         $movieFullName = "{$this->movie->name} {$this->movie->year}";
-        return $this->to('gustavobgama@gmail.com')
+        return $this->to($this->receipts)
             ->subject('Tem filme novo !!')
             ->view('emails.movie.downloaded')
             ->with([

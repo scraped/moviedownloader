@@ -38,7 +38,7 @@ class TorrentSearch implements ShouldQueue
      */
     public function __construct(Client $httpClient, Crawler $domCrawler)
     {
-        $this->url = config('moviedownloader.torrent_rss');
+        $this->url = config('moviedownloader.torrent_sources')[0];
         $this->httpClient = $httpClient;
         $this->domCrawler = $domCrawler;
     }
@@ -128,7 +128,7 @@ class TorrentSearch implements ShouldQueue
     protected function filter($allTorrents)
     {
         // TODO: move to class attribute
-        $maxSize = 1500000000;
+        $maxSize = config('moviedownloader.torrent_filters.max_size');
         $filteredTorrent = $allTorrents->where('size', '<', $maxSize)
             ->sortByDesc('seeders')
             ->first();
