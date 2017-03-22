@@ -3,16 +3,17 @@
 namespace App\Listeners;
 
 use App\Events\TorrentDownloadFinished;
+use App\Helpers\Torrent\MoviePath;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Mail;
 use OpenSubtitlesApi\FileGenerator;
 use OpenSubtitlesApi\SubtitlesManager;
-use Transmission\Model\File;
 use App\Mail\TorrentDownloadFinished as MailTorrentDownloadFinished;
 
 class RetrieveSubtitle implements ShouldQueue
 {
+    use MoviePath;
 
     /**
      * @var SubtitlesManager
@@ -54,22 +55,13 @@ class RetrieveSubtitle implements ShouldQueue
     {
         $torrent = $event->torrent;
         $movie = $event->movie;
-        $files = $torrent->getFiles();
-        $fileFullPath = '';
-        /** @var File $file */
-        foreach ($files as $file) {
-            $fileName = $file->getName();
-            if (preg_match('/.*\.[mp4|avi|mkv]/', $fileName)) {
-                $fileFullPath = "{$this->torrentBaseFolder}/{$fileName}";
-                break;
-            }
-        }
-        $subtitleFullPath = preg_replace('/\\.[^.\\s]{3,4}$/', '', $fileFullPath) . '.srt';
-        $subtitles = $this->subtitleManager->get($fileFullPath);
+        $movieFileFullPath = $this->getMovieFileFullPath($torrent);
+        $subtitleFullPath = preg_replace('/\\.[^.\\s]{3,4}$/', '', $movieFileFullPath) . '.srt';
+        $subtitles = $this->subtitleManager->get($movieFileFullPath);
         $isSubtitleFound = !empty($subtitles) && !empty($subtitles[0]);
         if ($isSubtitleFound) {
             $fileGenerator = new FileGenerator();
-            $fileGenerator->downloadSubtitle($subtitles[0], $fileFullPath);
+            $fileGenerator->downloadSubtitle($subtitles[0], $movieFileFullPath);
             logger("Subtitle retrieved: {$subtitleFullPath}");
         } else {
             logger("Subtitle not found: {$subtitleFullPath}");
