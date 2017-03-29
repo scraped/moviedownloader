@@ -1,14 +1,23 @@
 ## Description
 
-This projects aims to make torrent download dead simple. The user inform the wanted movies at his [Letterboxd](https://letterboxd.com/) watchlist and the movie and its subtitle will be downloaded to the configured folder. 
+This projects aims to make torrent download dead simple. The steps are the following:
+
+    1. user inform the wanted movies at his [Letterboxd](https://letterboxd.com/) watchlist
+    2. the movie and its subtitle (if found) will be downloaded to the configured folder
+    3. when the download terminates the user will receive an e-mail notification
 
 ## Installation
 
 You need Virtual box and Vagrant installed before proceed: 
 
     $ git clone <repo> ./MovieDownloader
+    $ read carefuly the file config/moviedownloader.php and custom accordingly the .env file
     $ cd MovieDownloader/vagrant && vagrant up
 
-## Configurations and usage
+## External services
 
-Check the file `config/moviedownloader` and its documentation and then you must customize your `.env` file with most appropriate values.
+The project use two external services. You need to have an account in both:
+
+* Letterboxd: responsible for the list of movies to download. Make you account [here](https://letterboxd.com/).
+* Opensubtitles: responsible for the movie subtitles. Make you account [here](https://www.opensubtitles.org/en/newuser).
+

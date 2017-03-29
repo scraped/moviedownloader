@@ -7,13 +7,13 @@ return [
     | Letterboxd watch list url
     |--------------------------------------------------------------------------
     |
-    | Here you define your letterboxd watchlist url. If you don't have one,
-    | go here and make one: https://letterboxd.com/
+    | Here you define your letterboxd watchlist url. If you don't have one
+    | account go here and make one: https://letterboxd.com/
     |
     */
 
     'letterboxd' => [
-        'watchlist_url' => env('LETTERBOXD_WATCHLIST_URL', 'https://letterboxd.com/gustavobgama/watchlist/'),
+        'watchlist_url' => env('LETTERBOXD_WATCHLIST_URL', 'https://letterboxd.com/username/watchlist/'),
     ],
 
     /*
@@ -53,8 +53,9 @@ return [
     | Opensubtitles connection to download subtitles
     |--------------------------------------------------------------------------
     |
-    | Here, inform your opensubtitle account. For language codes use this
-    | reference http://www.opensubtitles.org/addons/export_languages.php
+    | Here, inform your opensubtitle account. If you don't have one, create one
+    | here: https://www.opensubtitles.org/en/newuser .For language codes use
+    | this reference http://www.opensubtitles.org/addons/export_languages.php
     |
     */
     'opensubtitles' => [
