@@ -54,7 +54,9 @@ class DownloadChecker extends Command
                 /** @var Torrent $torrent */
                 $torrent = $torrentClient->get($hash);
             } catch (\Exception $e) {
-                // torrent not found at client
+                $movie->status = 'failed';
+                $movie->save();
+                continue;
             }
             if (!$torrent->isFinished()) {
                 continue;

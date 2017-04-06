@@ -100,10 +100,14 @@ class ReadMovieSource implements ShouldQueue
     protected function getResponse($url = '')
     {
         $url = (empty($url)) ? $this->url : $url;
-        $response = $this->httpClient->get($url);
+        try {
+            $response = $this->httpClient->get($url);
+        } catch (\Exception $e) {
+            throw new \Exception("The url {$url} can't be reached.");
+        }
         $responseStatus = $response->getStatusCode();
         if ($responseStatus != 200) {
-            throw new \Exception("The url {$this->url} return the following status: {$responseStatus}");
+            throw new \Exception("The url {$this->url} return the following status: {$responseStatus}.");
         }
 
         return $response->getBody()->getContents();
