@@ -14,6 +14,8 @@ You need Virtual box and Vagrant installed before proceed:
     $ read carefuly the file config/moviedownloader.php and custom accordingly the .env file
     $ cd MovieDownloader/vagrant && vagrant up
 
+You can check the download progress of transmission (torrent client) at [http://192.168.10.90:9091](http://192.168.10.90:9091)
+
 ## External services
 
 The project use two external services. You need to have an account in both:
