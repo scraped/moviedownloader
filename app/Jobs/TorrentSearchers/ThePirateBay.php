@@ -21,14 +21,22 @@ class ThePirateBay extends TorrentSearcher implements TorrentSearcherInterface
         parent::__construct($httpClient, $domCrawler);
     }
 
+    /**
+     * Search for torrents
+     *
+     *
+     * @param  string $query
+     *
+     * @throws \Exception
+     *
+     * @return array
+     */
     public function search($query)
     {
-        $this->torrents = [];
         $response = $this->httpClient->get(sprintf(static::SEARCH_URL, $query));
         if ($response->getStatusCode() != 200) {
             throw new \Exception('');
         }
-        $this->domCrawler->clear();
         $this->domCrawler->addContent($response->getBody()->getContents());
         $this->domCrawler->filter('#searchResult tr:not(.header)')->each(function(Crawler $node) {
             $description = $node->filter('.detDesc')->text();

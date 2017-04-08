@@ -33,7 +33,6 @@ abstract class TorrentSearcher
     {
         $this->httpClient = $httpClient;
         $this->domCrawler = $domCrawler;
-        $this->domCrawler->clear();
         $this->torrents = [];
     }
 }

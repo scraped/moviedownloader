@@ -34,7 +34,7 @@ class TorrentSearcher extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(TorrentSearchers::class, function($app) {
+        $this->app->bind(TorrentSearchers::class, function($app) {
             $torrentSearchers = config('moviedownloader.torrent_searchers');
 
             return new TorrentSearchers($app[Client::class], $app[Crawler::class], $torrentSearchers);
