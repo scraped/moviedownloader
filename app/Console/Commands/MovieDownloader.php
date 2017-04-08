@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\ReadMovieSource;
+use App\Jobs\MovieSourceReader;
 use Illuminate\Console\Command;
 
 class MovieDownloader extends Command
@@ -34,11 +34,11 @@ class MovieDownloader extends Command
     /**
      * Execute the console command.
      *
-     * @param  ReadMovieSource $sourceReader
+     * @param  MovieSourceReader $sourceReader
      *
      * @return void
      */
-    public function handle(ReadMovieSource $sourceReader)
+    public function handle(MovieSourceReader $sourceReader)
     {
         dispatch($sourceReader);
     }

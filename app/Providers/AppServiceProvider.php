@@ -2,10 +2,8 @@
 
 namespace App\Providers;
 
-use App\Jobs\ReadMovieSource;
-use GuzzleHttp\Client;
+use App\Jobs\MovieSourceReader;
 use Illuminate\Support\ServiceProvider;
-use Symfony\Component\DomCrawler\Crawler;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,10 +27,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(ReadMovieSource::class, function($app) {
+        $this->app->singleton(MovieSourceReader::class, function($app) {
             $url = config('moviedownloader.letterboxd.watchlist_url');
 
-            return new ReadMovieSource($url);
+            return new MovieSourceReader($url);
         });
     }
 
@@ -42,7 +40,7 @@ class AppServiceProvider extends ServiceProvider
     public function provides()
     {
         return [
-            ReadMovieSource::class,
+            MovieSourceReader::class,
         ];
     }
 }
