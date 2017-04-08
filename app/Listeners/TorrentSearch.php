@@ -5,43 +5,33 @@ namespace App\Listeners;
 use \App\Events\MovieRetrieved;
 use App\Events\TorrentChosen;
 use App\Events\TorrentsFound;
+use App\Jobs\TorrentSearchers;
 use GuzzleHttp\Client;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
 use Symfony\Component\DomCrawler\Crawler;
+use Xurumelous\TorrentScraper\Entity\SearchResult;
+use Xurumelous\TorrentScraper\TorrentScraperService;
 
 class TorrentSearch implements ShouldQueue
 {
 
     /**
-     * @var string
+     * @var TorrentSearchers
      */
-    protected $url;
-
-    /**
-     * @var Client
-     */
-    protected $httpClient;
-
-    /**
-     * @var Crawler
-     */
-    protected $domCrawler;
+    protected $torrentSearchers;
 
     /**
      * Create the event listener.
      *
-     * @param  Client $httpClient
-     * @param  Crawler $domCrawler
+     * @param  TorrentSearchers $torrentSearchers
      *
      * @return TorrentSearch
      */
-    public function __construct(Client $httpClient, Crawler $domCrawler)
+    public function __construct(TorrentSearchers $torrentSearchers)
     {
-        $this->url = config('moviedownloader.torrent_sources')[0];
-        $this->httpClient = $httpClient;
-        $this->domCrawler = $domCrawler;
+        $this->torrentSearchers = $torrentSearchers;
     }
 
     /**
@@ -55,8 +45,7 @@ class TorrentSearch implements ShouldQueue
     {
         $movieFullName = "{$event->movie->name} {$event->movie->year}";
         logger("Search for torrent: {$movieFullName}");
-        $response = $this->getResponse($movieFullName);
-        $allTorrents = $this->retrieveAllTorrents($response);
+        $allTorrents = collect($this->torrentSearchers->search($movieFullName));
         if ($allTorrents->isEmpty()) {
             logger("None torrent found: {$movieFullName}");
             return;
@@ -64,56 +53,4 @@ class TorrentSearch implements ShouldQueue
         event(new TorrentsFound($event->movie, $allTorrents));
     }
 
-    /**
-     * Search for movie at torrent rss
-     *
-     * @param  string $name
-     *
-     * @throws \Exception
-     *
-     * @return string
-     */
-    protected function getResponse($name)
-    {
-        $fullUrl = $this->url . rawurlencode($name);
-        $response = $this->httpClient->get($fullUrl);
-        $responseStatus = $response->getStatusCode();
-        if ($responseStatus != 200) {
-            throw new \Exception("The url {$fullUrl} return the following status: {$responseStatus}");
-        }
-
-        return $response->getBody()->getContents();
-    }
-
-    /**
-     * Retrieve
-     *
-     * @param  string $response
-     *
-     * @return Collection
-     */
-    protected function retrieveAllTorrents($response)
-    {
-        $this->domCrawler->addContent($response);
-        $results = [];
-        $items = $this->domCrawler->filterXPath('//channel/item');
-        $titles = $items->filterXPath('//title')->extract(['_text']);
-        $urls = $items->filterXPath('//enclosure')->extract(['url']);
-        $sizes = $items->filterXPath('//size')->extract(['_text']);
-        $seeders = $items->filterXPath('//seeders')->extract(['_text']);
-        $leechers = $items->filterXPath('//leechers')->extract(['_text']);
-        $infoHash = $items->filterXPath('//info_hash')->extract(['_text']);
-        foreach ($titles as $key => $title) {
-            $results[] = [
-                'title' => $title,
-                'url' => $urls[$key],
-                'size' => $sizes[$key],
-                'seeders' => $seeders[$key],
-                'leechers' => $leechers[$key],
-                'hash' => $infoHash[$key],
-            ];
-        }
-
-        return collect($results);
-    }
 }

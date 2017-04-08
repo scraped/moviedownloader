@@ -1,5 +1,7 @@
 <?php
 
+use App\Jobs\TorrentSearchers;
+
 return [
 
     /*
@@ -32,8 +34,15 @@ return [
         'password' => env('TRANSMISSION_PASSWORD', 'transmission'),
     ],
 
-    'torrent_sources' => [
-        'http://extratorrent.cc/rss.xml?type=search&cid=4&search=',
+    /*
+    |--------------------------------------------------------------------------
+    | Torrent searchers engines
+    |--------------------------------------------------------------------------
+    |
+    | Possible values: TorrentSearchers::THEPIRATEBAY, ...
+    */
+    'torrent_searchers' => [
+        TorrentSearchers::THEPIRATEBAY,
     ],
 
     /*
@@ -42,10 +51,11 @@ return [
     |--------------------------------------------------------------------------
     |
     | Filters to choose the torrent that fits to your needs.
+    | * max_size defined in MiB
     |
     */
     'torrent_filters' => [
-        'max_size' => env('TORRENT_FILTER_MAX_SIZE', 1500000000),
+        'max_size' => env('TORRENT_FILTER_MAX_SIZE', 1200),
     ],
 
     /*
