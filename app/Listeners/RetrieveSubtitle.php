@@ -57,7 +57,11 @@ class RetrieveSubtitle implements ShouldQueue
         $movie = $event->movie;
         $movieFileFullPath = $this->getMovieFileFullPath($torrent);
         $subtitleFullPath = preg_replace('/\\.[^.\\s]{3,4}$/', '', $movieFileFullPath) . '.srt';
-        $subtitles = $this->subtitleManager->get($movieFileFullPath);
+        try {
+            $subtitles = $this->subtitleManager->get($movieFileFullPath);
+        } catch (\Exception $e) {
+            $subtitles = [];
+        }
         $isSubtitleFound = !empty($subtitles) && !empty($subtitles[0]);
         if ($isSubtitleFound) {
             $fileGenerator = new FileGenerator();
