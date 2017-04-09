@@ -127,7 +127,7 @@ class MovieSourceReader implements ShouldQueue
                 unset($this->movies[$index]['link']);
             },
             'rejected' => function($reason, $index) {
-                // TODO: add some logic
+                unset($this->movies[$index]);
             },
         ]);
         $promise = $pool->promise();
