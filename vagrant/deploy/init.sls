@@ -2,8 +2,8 @@ Install php dependencies:
   composer.installed:
     - name: /opt/moviedownloader
     - user: vagrant
-    - optimize: False
-    - no_dev: False
+    - optimize: True
+    - no_dev: True
 
 Ensure database file is present:
   file.touch:

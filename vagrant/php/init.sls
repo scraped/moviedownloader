@@ -16,3 +16,4 @@ Install php packages:
       - php7.0-xmlrpc
       - php7.0-xml
       - php7.0-mbstring
+      - php7.0-zip

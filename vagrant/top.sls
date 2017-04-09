@@ -1,6 +1,6 @@
 base:
   moviedownloader:
-    - base.ng
+    - base
     - php
     - composer
     - redis
