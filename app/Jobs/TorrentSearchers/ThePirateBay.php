@@ -34,6 +34,7 @@ class ThePirateBay extends TorrentSearcher implements TorrentSearcherInterface
     {
         $response = $this->httpClient->get(sprintf(static::SEARCH_URL, $query));
         if ($response->getStatusCode() != 200) {
+            // TODO: add message
             throw new \Exception('');
         }
         $this->domCrawler->addContent($response->getBody()->getContents());
@@ -52,6 +53,7 @@ class ThePirateBay extends TorrentSearcher implements TorrentSearcherInterface
                 'size' => $torrentSizeConvertedToMib,
                 'seeders' => $node->filter('td')->eq(2)->text(),
                 'leechers' => $node->filter('td')->eq(3)->text(),
+                'tags' => $this->getTags($node->filter('.detName a')->text()),
             ];
         });
 

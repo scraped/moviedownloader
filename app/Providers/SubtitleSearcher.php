@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
+use App\Jobs\SubtitleSearchers;
 use Illuminate\Support\ServiceProvider;
-use OpenSubtitlesApi\SubtitlesManager;
 
-class OpenSubtitles extends ServiceProvider
+class SubtitleSearcher extends ServiceProvider
 {
     protected $defer = true;
 
@@ -26,17 +26,17 @@ class OpenSubtitles extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(SubtitlesManager::class, function($app) {
-            $config = config('moviedownloader.opensubtitles');
+        $this->app->bind(SubtitleSearchers::class, function($app) {
+            $config = config('moviedownloader.subtitle_searchers');
 
-            return new SubtitlesManager($config['username'], $config['password'], $config['language']);
+            return new SubtitleSearchers($config);
         });
     }
 
     public function provides()
     {
         return [
-            SubtitlesManager::class,
+            SubtitleSearchers::class,
         ];
     }
 }

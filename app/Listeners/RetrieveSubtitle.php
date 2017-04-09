@@ -16,16 +16,6 @@ class RetrieveSubtitle implements ShouldQueue
     use MoviePath;
 
     /**
-     * @var SubtitlesManager
-     */
-    protected $subtitleManager;
-
-    /**
-     * @var FileGenerator
-     */
-    protected $fileGenerator;
-
-    /**
      * @var string
      */
     protected $torrentBaseFolder;
@@ -33,15 +23,10 @@ class RetrieveSubtitle implements ShouldQueue
     /**
      * Create the event listener.
      *
-     * @param  SubtitlesManager $subtitlesManager
-     * @param  FileGenerator $fileGenerator
-     *
      * @return RetrieveSubtitle
      */
-    public function __construct(SubtitlesManager $subtitlesManager, FileGenerator $fileGenerator)
+    public function __construct()
     {
-        $this->subtitleManager = $subtitlesManager;
-        $this->fileGenerator = $fileGenerator;
         $this->torrentBaseFolder = config('moviedownloader.movie_folder');
     }
 
@@ -57,15 +42,11 @@ class RetrieveSubtitle implements ShouldQueue
         $movie = $event->movie;
         $movieFileFullPath = $this->getMovieFileFullPath($torrent);
         $subtitleFullPath = preg_replace('/\\.[^.\\s]{3,4}$/', '', $movieFileFullPath) . '.srt';
-        try {
-            $subtitles = $this->subtitleManager->get($movieFileFullPath);
-        } catch (\Exception $e) {
-            $subtitles = [];
-        }
-        $isSubtitleFound = !empty($subtitles) && !empty($subtitles[0]);
+        // TODO: if subtitle not found try one last thing, get by hash movie file
+        $isSubtitleFound = !is_null($movie->subtitle);
         if ($isSubtitleFound) {
-            $fileGenerator = new FileGenerator();
-            $fileGenerator->downloadSubtitle($subtitles[0], $movieFileFullPath);
+            $subtitleContent = gzdecode(file_get_contents($movie->subtitle));
+            file_put_contents($subtitleFullPath, $subtitleContent);
             logger("Subtitle retrieved: {$subtitleFullPath}");
         } else {
             logger("Subtitle not found: {$subtitleFullPath}");

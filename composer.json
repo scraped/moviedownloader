@@ -7,7 +7,6 @@
     "require": {
         "php": ">=5.6.4",
         "guzzlehttp/guzzle": "^6.2",
-        "kesar/php-open-subtitles": "dev-master",
         "kleiram/transmission-php": "dev-master",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",

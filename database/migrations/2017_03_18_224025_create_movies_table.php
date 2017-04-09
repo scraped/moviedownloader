@@ -19,7 +19,9 @@ class CreateMoviesTable extends Migration
             $table->smallInteger('year');
             $table->integer('imdb');
             $table->enum('status', ['searching', 'downloading', 'done', 'failed']);
+            $table->string('torrent')->nullable();
             $table->string('torrent_hash')->nullable();
+            $table->string('subtitle')->nullable();
             $table->timestamps();
         });
     }

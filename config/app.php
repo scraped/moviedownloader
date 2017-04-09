@@ -178,7 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\TorrentSearcher::class,
         App\Providers\Transmission::class,
-        App\Providers\OpenSubtitles::class,
+        App\Providers\SubtitleSearcher::class,
     ],
 
     /*

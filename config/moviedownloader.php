@@ -39,7 +39,7 @@ return [
     | Torrent searchers engines
     |--------------------------------------------------------------------------
     |
-    | Possible values: TorrentSearchers::THEPIRATEBAY, ...
+    | Possible values: TorrentSearchers::THEPIRATEBAY
     */
     'torrent_searchers' => [
         TorrentSearchers::THEPIRATEBAY,
@@ -68,11 +68,13 @@ return [
     | this reference http://www.opensubtitles.org/addons/export_languages.php
     |
     */
-    'opensubtitles' => [
-        'username' => env('OPENSUBTITLE_USERNAME', 'username'),
-        'password' => env('OPENSUBTITLE_PASSWORD', 'password'),
-        'language' => env('OPENSUBTITLE_LANGUAGE', 'pob'),
-        'user_agent' => env('OPENSUBTITLE_USER_AGENT', 'OSTestUserAgentTemp'),
+    'subtitle_searchers' => [
+        'opensubtitles' => [
+            'username' => env('OPENSUBTITLE_USERNAME', 'username'),
+            'password' => env('OPENSUBTITLE_PASSWORD', 'password'),
+            'language' => env('OPENSUBTITLE_LANGUAGE', 'pob'),
+            'user_agent' => env('OPENSUBTITLE_USER_AGENT', 'OSTestUserAgentTemp'),
+        ],
     ],
 
     /*

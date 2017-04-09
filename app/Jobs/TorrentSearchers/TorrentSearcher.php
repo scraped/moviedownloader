@@ -35,4 +35,42 @@ abstract class TorrentSearcher
         $this->domCrawler = $domCrawler;
         $this->torrents = [];
     }
+
+    /**
+     * Get tags
+     *
+     * @param  string $torrentTitle
+     *
+     * @return array
+     */
+    protected function getTags($torrentTitle)
+    {
+        $supportedTags = [
+            'BluRay' => ['BluRay', 'BRRip'],
+            'Cam' => ['Cam'],
+            'DVB' => ['DVB'],
+            'DVD' => ['DVD'],
+            'HD-DVD' => ['HD-DVD'],
+            'HDTV' => ['HDTV'],
+            'PPV' => ['PPV'],
+            'Telecine' => ['Telecine'],
+            'Telesync'=> ['Telesync'],
+            'TV' => ['TV'],
+            'VHS' => ['VHS'],
+            'VOD' => ['VOD'],
+            'WEB-DL' => ['WEB-DL'],
+            'WEBRip' => ['WEBRip'],
+            'Workprint' => ['Workprint'],
+        ];
+        $tagsFound = [];
+        foreach ($supportedTags as $identifier => $tags) {
+            foreach ($tags as $tag) {
+                if (stripos($torrentTitle, $tag) !== false) {
+                    $tagsFound[] = $identifier;
+                }
+            }
+        }
+
+        return $tagsFound;
+    }
 }
