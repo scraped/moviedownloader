@@ -24,7 +24,6 @@ class ThePirateBay extends TorrentSearcher implements TorrentSearcherInterface
     /**
      * Search for torrents
      *
-     *
      * @param  string $query
      *
      * @throws \Exception
@@ -39,6 +38,10 @@ class ThePirateBay extends TorrentSearcher implements TorrentSearcherInterface
         }
         $this->domCrawler->addContent($response->getBody()->getContents());
         $this->domCrawler->filter('#searchResult tr:not(.header)')->each(function(Crawler $node) {
+            $categories = $node->filter('td')->eq(0)->text();
+            if (strpos($categories, 'Video') === false || strpos($categories, 'Movies') === false) {
+                return;
+            }
             $description = $node->filter('.detDesc')->text();
             $torrentSize = (preg_match('/.*Size\ ([0-9]+\.[0-9]+).*([G|M]iB)/', $description, $matches)) ? $matches[1] : 0;
             $torrentSizeUnit = (isset($matches[2])) ? $matches[2] : 'MiB';
