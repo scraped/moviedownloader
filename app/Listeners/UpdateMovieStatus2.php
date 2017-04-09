@@ -27,9 +27,10 @@ class UpdateMovieStatus2
     public function handle(TorrentAddedToClient $event)
     {
         $torrent = $event->torrent;
-        $torrentName = $torrent->getName();
-        logger("Torrent added to client: {$torrentName}");
         $movie = $event->movie;
+        $torrentName = $torrent->getName();
+        $movieFullName = "{$movie->name} {$movie->year}";
+        logger("[{$movieFullName}] Torrent added to client: {$torrentName}");
         $movie->status = 'downloading';
         $movie->torrent_hash = $torrent->getHash();
         $movie->save();

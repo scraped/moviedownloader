@@ -53,13 +53,13 @@ class FilterTorrents implements ShouldQueue
         $movieFullName = "{$this->movie->name} {$this->movie->year}";
         $allTorrents = $event->torrents;
         $quantityOfTorrents = $allTorrents->count();
-        logger("{$quantityOfTorrents} torrents found: {$movieFullName}");
+        logger("[{$movieFullName}] {$quantityOfTorrents} torrents found");
         $torrentsSortedBySeeders = $allTorrents->where('size', '<', $this->maxSize)
             ->sortByDesc('seeders')
             ->all();
         $torrentFiltered = $this->getMostSeededTorrentThatHasSubtitle($torrentsSortedBySeeders);
         if (empty($torrentFiltered)) {
-            logger("After filtering no torrent left.");
+            logger("[{$movieFullName}] After filtering no torrent left.");
             return;
         }
         event(new TorrentChosen($this->movie, $torrentFiltered));

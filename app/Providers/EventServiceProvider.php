@@ -38,13 +38,13 @@ class EventServiceProvider extends ServiceProvider
         TorrentChosen::class           => [
             SendTorrentToClient::class,
         ],
+        TorrentAddedToClient::class    => [
+            UpdateMovieStatus2::class,
+        ],
         TorrentDownloadFinished::class => [
             UpdateMovieStatus::class,
             RemoveTorrentFromClient::class,
             RetrieveSubtitle::class,
-        ],
-        TorrentAddedToClient::class    => [
-            UpdateMovieStatus2::class,
         ],
     ];
 

@@ -44,7 +44,8 @@ class SaveMovies implements ShouldQueue
             if (!$movie->wasRecentlyCreated) {
                 continue;
             }
-            logger("Found new: {$movie['name']} {$movie['year']}");
+            $movieFullName = "{$movie->name} {$movie->year}";
+            logger("[{$movieFullName}] Found new");
             event(new MovieRetrieved($movie));
         }
     }

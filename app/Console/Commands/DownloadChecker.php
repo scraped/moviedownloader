@@ -62,7 +62,8 @@ class DownloadChecker extends Command
                 continue;
             }
             $movieFileFullPath = $this->getMovieFileFullPath($torrent);
-            logger("Torrent download finished: {$movieFileFullPath}");
+            $movieFullName = "{$movie->name} {$movie->year}";
+            logger("[{$movieFullName}] Torrent download finished: {$movieFileFullPath}");
             event(new TorrentDownloadFinished($torrent, $movie));
         }
     }

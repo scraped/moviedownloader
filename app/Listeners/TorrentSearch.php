@@ -44,10 +44,10 @@ class TorrentSearch implements ShouldQueue
     public function handle(MovieRetrieved $event)
     {
         $movieFullName = "{$event->movie->name} {$event->movie->year}";
-        logger("Search for torrent: {$movieFullName}");
+        logger("[{$movieFullName}] Search for torrent");
         $allTorrents = collect($this->torrentSearchers->search($movieFullName));
         if ($allTorrents->isEmpty()) {
-            logger("None torrent found: {$movieFullName}");
+            logger("[{$movieFullName}] None torrent found");
             return;
         }
         event(new TorrentsFound($event->movie, $allTorrents));

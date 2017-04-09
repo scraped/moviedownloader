@@ -45,8 +45,9 @@ class SendTorrentToClient implements ShouldQueue
     public function handle(TorrentChosen $event)
     {
         $torrentUrl = $event->torrent['url'];
-        logger("Torrent chosen: {$torrentUrl}");
         $movie = $event->movie;
+        $movieFullName = "{$movie->name} {$movie->year}";
+        logger("[{$movieFullName}] Torrent chosen: {$torrentUrl}");
         $movie->torrent = $torrentUrl;
         $movie->save();
         /** @var Torrent $torrent */
