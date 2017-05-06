@@ -8,10 +8,10 @@ use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Symfony\Component\DomCrawler\Crawler;
 
 class MovieSourceReader implements ShouldQueue
@@ -108,14 +108,14 @@ class MovieSourceReader implements ShouldQueue
      */
     protected function retrieveAndSetOtherData()
     {
-        $requests = function($total) {
+        $requests = function ($total) {
             foreach ($this->movies as $movie) {
                 yield new Request('GET', $movie['link']);
             }
         };
         $pool = new Pool($this->httpClient, $requests(count($this->movies)), [
             'concurrency' => 20,
-            'fulfilled' => function($response, $index) {
+            'fulfilled' => function ($response, $index) {
                 /** @var Response $response */
                 $this->domCrawler->addContent($response->getBody()->getContents());
                 $movieYear = $this->domCrawler->filter('#poster-col .film-poster')->attr('data-film-release-year');
@@ -126,7 +126,7 @@ class MovieSourceReader implements ShouldQueue
                 $this->movies[$index]['year'] = (int) $movieYear;
                 unset($this->movies[$index]['link']);
             },
-            'rejected' => function($reason, $index) {
+            'rejected' => function ($reason, $index) {
                 unset($this->movies[$index]);
             },
         ]);

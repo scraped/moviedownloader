@@ -2,17 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Events\TorrentDownloadFinished;
-use App\Helpers\Torrent\MoviePath;
-use App\Movie;
+use App\Jobs\DownloadChecker as DownloadCheckerJob;
 use Illuminate\Console\Command;
-use Transmission\Model\Torrent;
-use Transmission\Transmission;
 
 class DownloadChecker extends Command
 {
-    use MoviePath;
-
     /**
      * The name and signature of the console command.
      *
@@ -40,31 +34,15 @@ class DownloadChecker extends Command
     /**
      * Execute the console command.
      *
-     * @param  Transmission $torrentClient
+     * @param  DownloadCheckerJob $downloadChecker
      *
      * @return mixed
      */
-    public function handle(Transmission $torrentClient)
+    public function handle(DownloadCheckerJob $downloadChecker)
     {
-        $movies = Movie::where('status', 'downloading')->get();
-        /** @var Movie $movie */
-        foreach ($movies as $movie) {
-            $hash = $movie->torrent_hash;
-            try {
-                /** @var Torrent $torrent */
-                $torrent = $torrentClient->get($hash);
-            } catch (\Exception $e) {
-                $movie->status = 'failed';
-                $movie->save();
-                continue;
-            }
-            if (!$torrent->isFinished()) {
-                continue;
-            }
-            $movieFileFullPath = $this->getMovieFileFullPath($torrent);
-            $movieFullName = "{$movie->name} {$movie->year}";
-            logger("[{$movieFullName}] Torrent download finished: {$movieFileFullPath}");
-            event(new TorrentDownloadFinished($torrent, $movie));
+        while (true) {
+            dispatch($downloadChecker);
+            sleep(60);
         }
     }
 }

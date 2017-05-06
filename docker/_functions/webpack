@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+echo "===> Building front-end assets"
+npm run dev
