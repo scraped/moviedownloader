@@ -8,13 +8,20 @@ This projects aims to make torrent download dead simple. The steps are the follo
 
 ## Installation
 
-You need Virtual box and Vagrant installed before proceed: 
+You need **docker** and **docker compose** installed before proceed:
+
+    $ curl -fsSL https://get.docker.com | sh
+    # curl -L https://github.com/docker/compose/releases/download/1.13.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+    # chmod +x /usr/local/bin/docker-compose
+
+More information on how to install both [here](https://docs.docker.com/engine/installation/) and [here](https://docs.docker.com/compose/install/).
 
     $ git clone https://github.com/gustavobgama/moviedownloader.git ./MovieDownloader
+    $ cp .env.example .env
     $ read carefuly the file config/moviedownloader.php and custom accordingly the .env file
-    $ cd MovieDownloader/vagrant && vagrant up
+    $ cd MovieDownloader && docker-compose up -d
 
-You can check the download progress of transmission (torrent client) at [http://192.168.10.90:9091](http://192.168.10.90:9091)
+You can check the download progress of transmission (torrent client) at [http://172.23.0.5:9091](http://172.23.0.5:9091)
 
 ## External services
 
@@ -31,6 +38,6 @@ The movie downloader is built on top of great tools like...
 * [Transmission](https://transmissionbt.com/)
 * [Redis](https://redis.io/)
 * [PHP Transmission API](https://github.com/kleiram/transmission-php)
+* [Docker](https://www.docker.com/)
 
 and many others...
-
