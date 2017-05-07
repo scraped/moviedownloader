@@ -29,7 +29,6 @@ services:
     working_dir: /opt/moviedownloader
     volumes:
       - .:/opt/moviedownloader
-      - /home/gustavo/test:/data/movies
     depends_on:
       - bootstrap
       - redis
@@ -46,6 +45,7 @@ services:
     working_dir: /opt/moviedownloader
     volumes:
       - .:/opt/moviedownloader
+      - /home/gustavo/test:/data/movies
     depends_on:
       - bootstrap
       - redis
