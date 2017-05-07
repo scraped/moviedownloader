@@ -18,7 +18,7 @@ More information on how to install both [here](https://docs.docker.com/engine/in
 
     $ git clone https://github.com/gustavobgama/moviedownloader.git ./MovieDownloader
     $ cp .env.example .env
-    $ read carefuly the file config/moviedownloader.php and custom accordingly the .env file
+    $ read carefully the file config/moviedownloader.php and custom accordingly the .env file
     $ cd MovieDownloader && docker-compose up -d
 
 You can check the download progress of transmission (torrent client) at [http://172.23.0.5:9091](http://172.23.0.5:9091)
