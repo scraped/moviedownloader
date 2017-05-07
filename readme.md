@@ -17,9 +17,9 @@ You need **docker** and **docker compose** installed before proceed:
 More information on how to install both [here](https://docs.docker.com/engine/installation/) and [here](https://docs.docker.com/compose/install/).
 
     $ git clone https://github.com/gustavobgama/moviedownloader.git ./MovieDownloader
-    $ cp .env.example .env
+    $ cd MovieDownloader && cp .env.example .env
     $ read carefully the file config/moviedownloader.php and custom accordingly the .env file
-    $ cd MovieDownloader && docker-compose up --scale worker=5 -d
+    $ docker-compose up --scale worker=5 -d
 
 You can check the download progress of transmission (torrent client). First check the IP assigned to transmission service executing:
 
