@@ -25,7 +25,7 @@ You can check the download progress of transmission (torrent client). First chec
 
     $ docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' moviedownloader_transmission_1
 
-Then access http://IP:9091.
+Then access http://IP:9091 with user: admin and password: password.
 
 ## External services
 
