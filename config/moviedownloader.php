@@ -28,10 +28,10 @@ return [
     |
     */
     'transmission' => [
-        'host' => env('TRANSMISSION_HOST', '127.0.0.1'),
+        'host' => env('TRANSMISSION_HOST', 'transmission'),
         'port' => env('TRANSMISSION_PORT', 9091),
-        'username' => env('TRANSMISSION_USERNAME', 'transmission'),
-        'password' => env('TRANSMISSION_PASSWORD', 'transmission'),
+        'username' => env('TRANSMISSION_USERNAME', 'admin'),
+        'password' => env('TRANSMISSION_PASSWORD', 'password'),
     ],
 
     /*
