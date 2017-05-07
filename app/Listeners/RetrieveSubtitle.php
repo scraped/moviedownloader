@@ -4,12 +4,9 @@ namespace App\Listeners;
 
 use App\Events\TorrentDownloadFinished;
 use App\Helpers\Torrent\MoviePath;
-use Illuminate\Queue\InteractsWithQueue;
+use App\Mail\TorrentDownloadFinished as MailTorrentDownloadFinished;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Mail;
-use OpenSubtitlesApi\FileGenerator;
-use OpenSubtitlesApi\SubtitlesManager;
-use App\Mail\TorrentDownloadFinished as MailTorrentDownloadFinished;
 
 class RetrieveSubtitle implements ShouldQueue
 {
