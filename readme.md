@@ -19,9 +19,13 @@ More information on how to install both [here](https://docs.docker.com/engine/in
     $ git clone https://github.com/gustavobgama/moviedownloader.git ./MovieDownloader
     $ cp .env.example .env
     $ read carefully the file config/moviedownloader.php and custom accordingly the .env file
-    $ cd MovieDownloader && docker-compose up -d
+    $ cd MovieDownloader && docker-compose up --scale worker=5 -d
 
-You can check the download progress of transmission (torrent client) at [http://172.23.0.5:9091](http://172.23.0.5:9091)
+You can check the download progress of transmission (torrent client). First check the IP assigned to transmission service executing:
+
+    $ docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' moviedownloader_transmission_1
+
+Then access http://IP:9091.
 
 ## External services
 
