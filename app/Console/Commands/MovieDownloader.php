@@ -40,6 +40,9 @@ class MovieDownloader extends Command
      */
     public function handle(MovieSourceReader $sourceReader)
     {
-        dispatch($sourceReader);
+        while (true) {
+            dispatch($sourceReader);
+            sleep(60);
+        }
     }
 }

@@ -27,13 +27,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('movie:download')
-            ->everyMinute()
-            ->withoutOverlapping();
-
-         $schedule->command('download:check')
-            ->everyMinute()
-            ->withoutOverlapping();
     }
 
     /**

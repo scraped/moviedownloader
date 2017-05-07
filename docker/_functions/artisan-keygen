@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+source .env
+if [ "$APP_KEY" = "" ]; then
+  echo "===> Generating application key"
+  php artisan key:generate
+fi
