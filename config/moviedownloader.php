@@ -97,6 +97,6 @@ return [
     | Folder where movies and subtitles will be saved.
     |
     */
-    'movie_folder' => env('MOVIE_FOLDER', '/opt/moviedownloader'),
+    'movie_folder' => '/data/movies',
 
 ];

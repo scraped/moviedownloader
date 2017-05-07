@@ -45,7 +45,7 @@ services:
     working_dir: /opt/moviedownloader
     volumes:
       - .:/opt/moviedownloader
-      - /home/gustavo/test:/data/movies
+      - ${MOVIE_FOLDER}:/data/movies
     depends_on:
       - bootstrap
       - redis
@@ -54,7 +54,7 @@ services:
   transmission:
     image: rlesouef/alpine-transmission:latest
     volumes:
-      - /home/gustavo/test:/data/movies
+      - ${MOVIE_FOLDER}:/data/movies
     depends_on:
       - moviedownloader
     networks:
