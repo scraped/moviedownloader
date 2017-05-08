@@ -29,6 +29,7 @@ services:
     working_dir: /opt/moviedownloader
     volumes:
       - .:/opt/moviedownloader
+      - ${MOVIE_FOLDER}:/data/movies
     depends_on:
       - bootstrap
       - redis
