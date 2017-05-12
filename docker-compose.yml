@@ -18,14 +18,16 @@ services:
     working_dir: /opt/moviedownloader
     volumes:
       - .:/opt/moviedownloader
+      - ${MOVIE_FOLDER}:/data/movies
     depends_on:
       - bootstrap
       - redis
+      - transmission
     networks:
       - backend
-  downloadchecker:
-    build: ./docker/downloadchecker
-    command: php artisan download:check
+  worker:
+    build: ./docker/worker
+    command: php artisan queue:work --tries=3
     working_dir: /opt/moviedownloader
     volumes:
       - .:/opt/moviedownloader
@@ -40,23 +42,9 @@ services:
     image: redis:3.2.8-alpine
     networks:
       - backend
-  worker:
-    build: ./docker/worker
-    command: php artisan queue:work --tries=3
-    working_dir: /opt/moviedownloader
-    volumes:
-      - .:/opt/moviedownloader
-      - ${MOVIE_FOLDER}:/data/movies
-    depends_on:
-      - bootstrap
-      - redis
-    networks:
-      - backend
   transmission:
     image: rlesouef/alpine-transmission:latest
     volumes:
       - ${MOVIE_FOLDER}:/data/movies
-    depends_on:
-      - moviedownloader
     networks:
       - backend
