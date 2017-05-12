@@ -16,7 +16,6 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         MovieDownloader::class,
-        DownloadChecker::class,
     ];
 
     /**
