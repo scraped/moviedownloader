@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\DownloadChecker;
 use App\Jobs\MovieSourceReader;
 use Illuminate\Console\Command;
 
@@ -35,13 +36,15 @@ class MovieDownloader extends Command
      * Execute the console command.
      *
      * @param  MovieSourceReader $sourceReader
+     * @param  DownloadChecker $downloadChecker
      *
      * @return void
      */
-    public function handle(MovieSourceReader $sourceReader)
+    public function handle(MovieSourceReader $sourceReader, DownloadChecker $downloadChecker)
     {
         while (true) {
             dispatch($sourceReader);
+            dispatch($downloadChecker);
             sleep(60);
         }
     }
