@@ -43,7 +43,7 @@ trait MoviePath
     public function checkFileHasAllMovieWords($fileName, $movieName)
     {
         preg_match_all('~\w+(?:-\w+)*~', $movieName, $movieNameWords);
-        foreach ($movieNameWords as $word) {
+        foreach ($movieNameWords[0] as $word) {
             if (strpos(strtolower($fileName), strtolower($word)) === false) {
                 return false;
             }
