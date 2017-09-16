@@ -6,6 +6,7 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repos
 
 RUN apk update && apk --no-cache add \
   curl-dev \
+  git \
   libxml2-dev \
   shadow \
   zlib-dev
