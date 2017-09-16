@@ -2,36 +2,29 @@
 
 namespace App\Listeners;
 
-use \App\Events\MovieRetrieved;
-use App\Events\TorrentChosen;
+use App\Events\MovieRetrieved;
 use App\Events\TorrentsFound;
-use App\Jobs\TorrentSearchers;
-use GuzzleHttp\Client;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Collection;
-use Symfony\Component\DomCrawler\Crawler;
-use Xurumelous\TorrentScraper\Entity\SearchResult;
 use Xurumelous\TorrentScraper\TorrentScraperService;
 
 class TorrentSearch implements ShouldQueue
 {
 
     /**
-     * @var TorrentSearchers
+     * @var TorrentScraperService
      */
-    protected $torrentSearchers;
+    protected $torrentSearcher;
 
     /**
      * Create the event listener.
      *
-     * @param  TorrentSearchers $torrentSearchers
+     * @param TorrentScraperService $torrentSearcher
      *
      * @return TorrentSearch
      */
-    public function __construct(TorrentSearchers $torrentSearchers)
+    public function __construct(TorrentScraperService $torrentSearcher)
     {
-        $this->torrentSearchers = $torrentSearchers;
+        $this->torrentSearcher = $torrentSearcher;
     }
 
     /**
@@ -45,7 +38,15 @@ class TorrentSearch implements ShouldQueue
     {
         $movieFullName = "{$event->movie->name} {$event->movie->year}";
         logger("[{$movieFullName}] Search for torrent");
-        $allTorrents = collect($this->torrentSearchers->search($movieFullName));
+        $allTorrents = collect($this->torrentSearcher->search($movieFullName))->transform(function ($torrent) {
+            $converted = [];
+            foreach ((array) $torrent as $key => $value) {
+                $converted[preg_match('/^\x00(?:.*?)\x00(.+)/', $key, $matches) ? $matches[1] : $key] = $value;
+            }
+
+            return $converted;
+        });
+
         if ($allTorrents->isEmpty()) {
             logger("[{$movieFullName}] None torrent found");
             return;

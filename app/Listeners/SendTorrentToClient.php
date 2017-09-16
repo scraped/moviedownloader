@@ -3,11 +3,10 @@
 namespace App\Listeners;
 
 use App\Events\TorrentAddedToClient;
-use \App\Events\TorrentChosen;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Transmission\Model\Torrent;
 use Transmission\Transmission;
+use \App\Events\TorrentChosen;
 
 class SendTorrentToClient implements ShouldQueue
 {
@@ -44,7 +43,7 @@ class SendTorrentToClient implements ShouldQueue
      */
     public function handle(TorrentChosen $event)
     {
-        $torrentUrl = $event->torrent['url'];
+        $torrentUrl = $event->torrent['magnetUrl'];
         $movie = $event->movie;
         $movieFullName = "{$movie->name} {$movie->year}";
         logger("[{$movieFullName}] Torrent chosen: {$torrentUrl}");
