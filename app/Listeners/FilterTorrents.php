@@ -4,18 +4,13 @@ namespace App\Listeners;
 
 use App\Events\TorrentChosen;
 use App\Events\TorrentsFound;
-use App\Jobs\SubtitleSearchers;
 use App\Movie;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Collection;
+use Kminek\OpenSubtitles\Client;
 
 class FilterTorrents implements ShouldQueue
 {
-
-    /**
-     * @var SubtitleSearchers
-     */
-    protected $subtitleSearchers;
 
     /**
      * @var Movie
@@ -23,21 +18,20 @@ class FilterTorrents implements ShouldQueue
     protected $movie;
 
     /**
-     * @var int
+     * @var Client
      */
-    protected $maxSize;
+    protected $subtitleSearcher;
 
     /**
      * Create the event listener.
      *
-     * @param  SubtitleSearchers $subtitleSearchers
+     * @param Client $subtitleSearcher
      *
      * @return FilterTorrents
      */
-    public function __construct(SubtitleSearchers $subtitleSearchers)
+    public function __construct(Client $subtitleSearcher)
     {
-        $this->subtitleSearchers = $subtitleSearchers;
-        $this->maxSize = config('moviedownloader.torrent_filters.max_size');
+        $this->subtitleSearcher = $subtitleSearcher;
     }
 
     /**
@@ -54,10 +48,7 @@ class FilterTorrents implements ShouldQueue
         $allTorrents = $event->torrents;
         $quantityOfTorrents = $allTorrents->count();
         logger("[{$movieFullName}] {$quantityOfTorrents} torrents found");
-        $torrentsSortedBySeeders = $allTorrents->where('size', '<', $this->maxSize)
-            ->sortByDesc('seeders')
-            ->all();
-        $torrentFiltered = $this->getMostSeededTorrentThatHasSubtitle($torrentsSortedBySeeders);
+        $torrentFiltered = $this->getMostSeededTorrentThatHasSubtitle($allTorrents);
         if (empty($torrentFiltered)) {
             logger("[{$movieFullName}] After filtering no torrent left.");
             return;
@@ -68,15 +59,25 @@ class FilterTorrents implements ShouldQueue
     /**
      * Filter torrents based on its available subtitles
      *
-     * @param  array $torrents
+     * @param  Collection $allTorrents
      *
      * @return array
      */
-    protected function getMostSeededTorrentThatHasSubtitle($torrents)
+    protected function getMostSeededTorrentThatHasSubtitle($allTorrents)
     {
-        foreach ($torrents as $torrent) {
-            $subtitles = collect($this->subtitleSearchers->getAll($this->movie->imdb, $torrent['tags']));
-            $subtitle = $subtitles->where('MovieReleaseName', $torrent['title'])->first();
+        $torrentsSortedBySeeders = $allTorrents->where('size', '<', config('moviedownloader.torrent_filters.max_size'))
+            ->sortByDesc('seeders')
+            ->all();
+        foreach ($torrentsSortedBySeeders as $torrent) {
+            $response = $this->subtitleSearcher->searchSubtitles([
+                [
+                    'sublanguageid' => config('moviedownloader.opensubtitles.language'),
+                    'imdbid' => $this->movie->imdb,
+                    'tags' => '',
+                ],
+            ]);
+            $subtitles = collect($response->toArray()['data']);
+            $subtitle = $subtitles->where('MovieReleaseName', $torrent['name'])->first();
             if ($subtitle) {
                 $this->movie->subtitle = $subtitle['SubDownloadLink'];
                 $this->movie->save();

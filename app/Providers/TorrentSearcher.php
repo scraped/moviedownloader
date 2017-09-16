@@ -2,10 +2,8 @@
 
 namespace App\Providers;
 
-use App\Jobs\TorrentSearchers;
-use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
-use Symfony\Component\DomCrawler\Crawler;
+use Xurumelous\TorrentScraper\TorrentScraperService;
 
 class TorrentSearcher extends ServiceProvider
 {
@@ -34,17 +32,20 @@ class TorrentSearcher extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(TorrentSearchers::class, function($app) {
+        $this->app->bind(TorrentScraperService::class, function ($app) {
             $torrentSearchers = config('moviedownloader.torrent_searchers');
+            if (empty($torrentSearchers)) {
+                throw new \Exception("Missing torrent searchers, please check the configuration.");
+            }
 
-            return new TorrentSearchers($app[Client::class], $app[Crawler::class], $torrentSearchers);
+            return new TorrentScraperService($torrentSearchers);
         });
     }
 
     public function provides()
     {
         return [
-            TorrentSearchers::class,
+            TorrentScraperService::class,
         ];
     }
 }

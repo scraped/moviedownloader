@@ -3,11 +3,10 @@
 namespace App\Listeners;
 
 use App\Events\TorrentDownloadFinished;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Transmission\Transmission;
 
-class RemoveTorrentFromClient
+class RemoveTorrentFromClient implements ShouldQueue
 {
 
     /**

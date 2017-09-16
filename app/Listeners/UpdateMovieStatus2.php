@@ -3,11 +3,9 @@
 namespace App\Listeners;
 
 use App\Events\TorrentAddedToClient;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Transmission\Model\File;
 
-class UpdateMovieStatus2
+class UpdateMovieStatus2 implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -30,7 +28,7 @@ class UpdateMovieStatus2
         $movie = $event->movie;
         $torrentName = $torrent->getName();
         $movieFullName = "{$movie->name} {$movie->year}";
-        logger("[{$movieFullName}] Torrent added to client: {$torrentName}");
+        logger("[{$movieFullName}] Torrent added to Transmission: {$torrentName}");
         $movie->status = 'downloading';
         $movie->torrent_hash = $torrent->getHash();
         $movie->save();

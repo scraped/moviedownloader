@@ -4,10 +4,9 @@ namespace App\Listeners;
 
 use App\Events\TorrentDownloadFinished;
 use App\Movie;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class UpdateMovieStatus
+class UpdateMovieStatus implements ShouldQueue
 {
     /**
      * Create the event listener.

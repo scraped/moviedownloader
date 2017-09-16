@@ -2,11 +2,17 @@
 
 namespace App\Providers;
 
-use App\Jobs\SubtitleSearchers;
 use Illuminate\Support\ServiceProvider;
+use Kminek\OpenSubtitles\Client;
 
 class SubtitleSearcher extends ServiceProvider
 {
+
+    /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
     protected $defer = true;
 
     /**
@@ -26,17 +32,18 @@ class SubtitleSearcher extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(SubtitleSearchers::class, function($app) {
-            $config = config('moviedownloader.subtitle_searchers');
+        $this->app->bind(Client::class, function ($app) {
+            $config = config('moviedownloader.opensubtitles');
+            unset($config['language']);
 
-            return new SubtitleSearchers($config);
+            return Client::create($config);
         });
     }
 
     public function provides()
     {
         return [
-            SubtitleSearchers::class,
+            Client::class,
         ];
     }
 }
