@@ -65,18 +65,17 @@ class FilterTorrents implements ShouldQueue
      */
     protected function getMostSeededTorrentThatHasSubtitle($allTorrents)
     {
+        $response = $this->subtitleSearcher->searchSubtitles([
+            [
+                'sublanguageid' => config('moviedownloader.opensubtitles.language'),
+                'imdbid' => $this->movie->imdb,
+            ],
+        ]);
+        $subtitles = collect($response->toArray()['data']);
         $torrentsSortedBySeeders = $allTorrents->where('size', '<', config('moviedownloader.torrent_filters.max_size'))
             ->sortByDesc('seeders')
             ->all();
         foreach ($torrentsSortedBySeeders as $torrent) {
-            $response = $this->subtitleSearcher->searchSubtitles([
-                [
-                    'sublanguageid' => config('moviedownloader.opensubtitles.language'),
-                    'imdbid' => $this->movie->imdb,
-                    'tags' => '',
-                ],
-            ]);
-            $subtitles = collect($response->toArray()['data']);
             $subtitle = $subtitles->where('MovieReleaseName', $torrent['name'])->first();
             if ($subtitle) {
                 $this->movie->subtitle = $subtitle['SubDownloadLink'];
