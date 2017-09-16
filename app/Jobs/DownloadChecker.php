@@ -54,7 +54,7 @@ class DownloadChecker implements ShouldQueue
             if (!$torrent->isFinished()) {
                 continue;
             }
-            $movieFileFullPath = $this->getMovieFileFullPath($torrent);
+            $movieFileFullPath = $this->getMovieFileFullPath($movie, $torrent);
             $movieFullName = "{$movie->name} {$movie->year}";
             logger("[{$movieFullName}] Torrent download finished: {$movieFileFullPath}");
             event(new TorrentDownloadFinished($torrent, $movie));
