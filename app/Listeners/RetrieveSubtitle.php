@@ -50,7 +50,7 @@ class RetrieveSubtitle implements ShouldQueue
             logger("[{$movieFullName}] Subtitle not found: {$subtitleFullPath}");
         }
         $receipts = explode(',', config('moviedownloader.notification.email'));
-        Mail::send(new MailTorrentDownloadFinished($event->torrent, $movie, $receipts, $isSubtitleFound));
+        Mail::send(new MailTorrentDownloadFinished($movie, $receipts, $isSubtitleFound));
         logger("[{$movieFullName}] Notification sent: " . config('moviedownloader.notification.email'));
     }
 }

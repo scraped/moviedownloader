@@ -4,19 +4,14 @@ namespace App\Mail;
 
 use App\Movie;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Transmission\Model\Torrent;
 
 class TorrentDownloadFinished extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
-
-    /**
-     * @var Torrent
-     */
-    protected $torrent;
 
     /**
      * @var Movie
@@ -36,16 +31,14 @@ class TorrentDownloadFinished extends Mailable implements ShouldQueue
     /**
      * Create a new message instance.
      *
-     * @param  Torrent $torrent
      * @param  Movie $movie
      * @param  array $receipts
      * @param  bool $isSubtitleFound
      *
      * @return TorrentDownloadFinished
      */
-    public function __construct(Torrent $torrent, Movie $movie, array $receipts, $isSubtitleFound)
+    public function __construct(Movie $movie, array $receipts, $isSubtitleFound)
     {
-        $this->torrent = $torrent;
         $this->movie = $movie;
         $this->receipts = $receipts;
         $this->isSubtitleFound = $isSubtitleFound;
