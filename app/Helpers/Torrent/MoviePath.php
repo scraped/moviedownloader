@@ -24,7 +24,7 @@ trait MoviePath
         /** @var File $file */
         foreach ($files as $file) {
             $fileName = $file->getName();
-            if (preg_match('/\.mp4|avi|mkv|webl|mpg$/', $fileName) !== false && $this->checkFileHasAllMovieWords($fileName, $movie->name)) {
+            if (preg_match('/\.mp4|avi|mkv|webl|mpg$/', $fileName) !== 0 && $this->checkFileHasAllMovieWords($fileName, $movie->name)) {
                 $fileFullPath = "{$torrentBaseFolder}/{$fileName}";
                 break;
             }
