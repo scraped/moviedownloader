@@ -3,10 +3,10 @@
 namespace App\Listeners;
 
 use App\Events\TorrentAddedToClient;
+use App\Events\TorrentChosen;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Transmission\Model\Torrent;
 use Transmission\Transmission;
-use \App\Events\TorrentChosen;
 
 class SendTorrentToClient implements ShouldQueue
 {

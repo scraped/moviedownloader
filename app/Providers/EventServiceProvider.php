@@ -5,17 +5,17 @@ namespace App\Providers;
 use App\Events\MovieRetrieved;
 use App\Events\MovieSourceRead;
 use App\Events\TorrentAddedToClient;
-use App\Events\TorrentDownloadFinished;
 use App\Events\TorrentChosen;
-use App\Events\TorrentsFound;
-use App\Listeners\FilterTorrents;
+use App\Events\TorrentDownloadFinished;
+use App\Events\TorrentsAndSubtitlesFound;
+use App\Listeners\ChooseTorrent;
 use App\Listeners\RemoveTorrentFromClient;
 use App\Listeners\RetrieveSubtitle;
 use App\Listeners\SaveMovies;
 use App\Listeners\SendTorrentToClient;
-use App\Listeners\TorrentSearch;
-use App\Listeners\UpdateMovieStatus;
+use App\Listeners\TorrentAndSubtitleSearch;
 use App\Listeners\UpdateMovieStatus2;
+use App\Listeners\UpdateMovieStatus;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -26,19 +26,19 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        MovieSourceRead::class         => [
+        MovieSourceRead::class => [
             SaveMovies::class,
         ],
-        MovieRetrieved::class          => [
-            TorrentSearch::class,
+        MovieRetrieved::class => [
+            TorrentAndSubtitleSearch::class,
         ],
-        TorrentsFound::class           => [
-            FilterTorrents::class,
+        TorrentsAndSubtitlesFound::class => [
+            ChooseTorrent::class,
         ],
-        TorrentChosen::class           => [
+        TorrentChosen::class => [
             SendTorrentToClient::class,
         ],
-        TorrentAddedToClient::class    => [
+        TorrentAddedToClient::class => [
             UpdateMovieStatus2::class,
         ],
         TorrentDownloadFinished::class => [
