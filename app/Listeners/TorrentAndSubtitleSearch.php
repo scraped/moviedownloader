@@ -98,8 +98,9 @@ class TorrentAndSubtitleSearch implements ShouldQueue
                 'imdbid' => $imdbId,
             ],
         ]);
+        $subtitles = collect($response->toArray()['data'])->where('Score', '>', 10);
 
-        return collect($response->toArray()['data']);
+        return $subtitles;
     }
 
 }
