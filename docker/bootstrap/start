@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+_="$(dirname "$0")/../_functions"
+
+$_/user_setup www-data
+$_/composer
+$_/create_database
+$_/artisan-migrate
+$_/scheduler

@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+if [ ! -f "database/database.sqlite" ]; then
+  echo "===> Creating database"
+  touch database/database.sqlite
+fi

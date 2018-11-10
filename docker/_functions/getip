@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+getip () {
+  getent hosts $1 | awk '{print $1}'
+}
+
+getip $@

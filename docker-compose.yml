@@ -1,0 +1,54 @@
+version: '3'
+
+networks:
+  backend:
+
+services:
+
+  bootstrap:
+    build: ./docker/bootstrap
+    command: ./docker/bootstrap/start
+    working_dir: /opt/moviedownloader
+    volumes:
+      - .:/opt/moviedownloader
+    networks:
+      - backend
+
+  worker_before_download:
+    build: ./docker/bootstrap
+    command: php artisan queue:work --queue=before_download --delay=30
+    working_dir: /opt/moviedownloader
+    volumes:
+      - .:/opt/moviedownloader
+    depends_on:
+      - bootstrap
+      - redis
+      - transmission
+    networks:
+      - backend
+
+  worker_after_download:
+    build: ./docker/bootstrap
+    command: php artisan queue:work --queue=after_download --delay=120
+    working_dir: /opt/moviedownloader
+    volumes:
+      - .:/opt/moviedownloader
+      - ${MOVIE_FOLDER}:/data/movies
+    depends_on:
+      - bootstrap
+      - redis
+      - transmission
+    networks:
+      - backend
+  
+  redis:
+    image: redis:3.2.8-alpine
+    networks:
+      - backend
+  
+  transmission:
+    image: rlesouef/alpine-transmission:latest
+    volumes:
+      - ${MOVIE_FOLDER}:/data/movies
+    networks:
+      - backend
